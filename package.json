@@ -1,0 +1,18 @@
+{
+  "name": "octochest",
+  "version": "1.0.0",
+  "description": "🧰 OctoChest - ERC721 NFT project with Hardhat + Foundry + IPFS",
+  "license": "MIT",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat compile && hardhat ignition deploy ignition/modules/OctoChestModule.ts --network $NETWORK",
+    "verify": "hardhat verify --network $NETWORK",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.1.4",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.24.3"
+  }
+}
