@@ -1,0 +1,10 @@
+{
+  "name": "OctoChest #18",
+  "description": "An ancient OctoChest containing rare and powerful treasures. Level 2 NFT.",
+  "image": "ipfs://QmZGJUN2AQKRnjBLqV54ymsA1uSep6rBARqLEnw5fwjp8s/18.png",
+  "attributes": [
+    { "trait_type": "background_color", "value": "green" },
+    { "trait_type": "level", "value": "2" },
+    { "trait_type": "style", "value": "skull" }
+  ]
+}

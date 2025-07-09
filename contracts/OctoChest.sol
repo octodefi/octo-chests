@@ -52,29 +52,28 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
         _grantRole(MINTER_ROLE, minter);
     }
 
-    // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-    // ┃     Public Functions      ┃
-    // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+    // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    // ┃       Mint Functions: Level 1 & 2     ┃
+    // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-    /// @notice Mints a new token to the specified address
-    /// @dev Only accounts with MINTER_ROLE can call this function
-    /// @param to The recipient of the newly minted token
+    /// @notice Mints a new Level 1 NFT to the specified address
+    /// @dev Level 1 NFTs use images 1 through 5
+    /// @param to The address that will receive the newly minted NFT
     /// @return tokenId The ID of the newly minted token
-    function safeMint(
+    function safeMintLevel1(
         address to
     ) public onlyRole(MINTER_ROLE) returns (uint256) {
-        uint256 tokenId = _nextTokenId++;
-        _safeMint(to, tokenId);
+        return _mintWithRange(to, 1, 5); // Images 1–5
+    }
 
-        // Generate image number between 1 and 20
-        uint8 imageNumber = uint8(
-            (uint256(
-                keccak256(abi.encodePacked(block.timestamp, to, tokenId))
-            ) % 20) + 1
-        );
-        _imageNumbers[tokenId] = imageNumber;
-
-        return tokenId;
+    /// @notice Mints a new Level 2 NFT to the specified address
+    /// @dev Level 2 NFTs use images 6 through 20
+    /// @param to The address that will receive the newly minted NFT
+    /// @return tokenId The ID of the newly minted token
+    function safeMintLevel2(
+        address to
+    ) public onlyRole(MINTER_ROLE) returns (uint256) {
+        return _mintWithRange(to, 6, 20); // Images 6–20
     }
 
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -98,6 +97,32 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
         super._increaseBalance(account, value);
     }
 
+    function _mintWithRange(
+        address to,
+        uint8 min,
+        uint8 max
+    ) internal returns (uint256) {
+        require(min < max && max <= 20, "Invalid image range");
+
+        uint256 tokenId = _nextTokenId++;
+        _safeMint(to, tokenId);
+
+        uint8 imageNumber = uint8(
+            (uint256(
+                keccak256(abi.encodePacked(block.timestamp, to, tokenId))
+            ) % (max - min + 1)) + min
+        );
+        _imageNumbers[tokenId] = imageNumber;
+
+        return tokenId;
+    }
+
+    function _tokenExist(uint256 tokenId) internal view {
+        if (_ownerOf(tokenId) == address(0)) {
+            revert OctoChestDontExist();
+        }
+    }
+
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     // ┃     View / Pure Functions     ┃
     // ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
@@ -115,9 +140,7 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     function tokenURI(
         uint256 tokenId
     ) public view override returns (string memory) {
-        if (_ownerOf(tokenId) == address(0)) {
-            revert OctoChestDontExist();
-        }
+        _tokenExist(tokenId);
 
         uint8 imageNumber = _imageNumbers[tokenId];
 
@@ -138,5 +161,11 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function imageNumberOf(uint256 tokenId) external view returns (uint8) {
+        _tokenExist(tokenId);
+
+        return _imageNumbers[tokenId];
     }
 }
