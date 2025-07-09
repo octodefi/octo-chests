@@ -17,6 +17,9 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     string private constant BASE_URI =
         "ipfs://QmZS34ktG626a3Gqu7CC3QiHeRtVWQzDSt7LsDGHuZoJzw/";
 
+    uint8 public constant LEVEL_ONE_IMAGE_NUMBER = 5;
+    uint8 public constant MAX_IMAGES = 20;
+
     // ┏━━━━━━━━━━━━━━━━━━━━┓
     // ┃       Errors       ┃
     // ┗━━━━━━━━━━━━━━━━━━━━┛
@@ -63,7 +66,7 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     function safeMintLevel1(
         address to
     ) public onlyRole(MINTER_ROLE) returns (uint256) {
-        return _mintWithRange(to, 1, 5); // Images 1–5
+        return _mintWithRange(to, 1, LEVEL_ONE_IMAGE_NUMBER); // Images 1–5
     }
 
     /// @notice Mints a new Level 2 NFT to the specified address
@@ -73,7 +76,7 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     function safeMintLevel2(
         address to
     ) public onlyRole(MINTER_ROLE) returns (uint256) {
-        return _mintWithRange(to, 6, 20); // Images 6–20
+        return _mintWithRange(to, LEVEL_ONE_IMAGE_NUMBER + 1, MAX_IMAGES); // Images 6–20
     }
 
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
