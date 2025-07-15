@@ -15,7 +15,7 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     /// @notice Base URI for all token metadata, pointing to IPFS
     string private constant BASE_URI =
-        "ipfs://QmZS34ktG626a3Gqu7CC3QiHeRtVWQzDSt7LsDGHuZoJzw/";
+        "ipfs://QmYegaVCjTtZa8juJYEcQLY4eiwXGrajenWPD85ASDaRLT/";
 
     uint8 public constant LEVEL_ONE_IMAGE_NUMBER = 5;
     uint8 public constant MAX_IMAGES = 20;

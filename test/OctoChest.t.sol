@@ -19,7 +19,8 @@ contract OctoChestTest is Test {
     ////////////////
     /// safeMint ///
     ////////////////
-    function testSafeMintLevel1() external {
+
+    function test_safeMintLevel1_Success() external {
         address receiver = makeAddr("reveiver");
 
         vm.prank(MINTER);
@@ -32,7 +33,7 @@ contract OctoChestTest is Test {
         uint8 imageNumber = nft.imageNumberOf(tokenId); // you may need to expose this if private
         string memory expectedUri = string(
             abi.encodePacked(
-                "ipfs://QmZS34ktG626a3Gqu7CC3QiHeRtVWQzDSt7LsDGHuZoJzw/",
+                "ipfs://QmYegaVCjTtZa8juJYEcQLY4eiwXGrajenWPD85ASDaRLT/",
                 Strings.toString(imageNumber),
                 ".json"
             )
