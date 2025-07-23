@@ -32,10 +32,12 @@ const config: HardhatUserConfig = {
   },
   networks: {
     arbitrumSepolia: getNetwork(Network.ARBITRUM_SEPOLIA),
+    arbitrum: getNetwork(Network.ARBITRUM),
   },
   etherscan: {
     apiKey: {
       arbitrumSepolia: ARBISCAN_API_KEY,
+      arbitrum: ARBISCAN_API_KEY,
     },
     customChains: [
       {

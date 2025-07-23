@@ -6,7 +6,17 @@ const OctoChestModule = buildModule("OctoChestModule", (m) => {
 
   const octoChest = m.contract("OctoChest", [defaultAdmin, minter], {});
 
-  return { octoChest };
+  const fee = m.getParameter("fee");
+
+  const paymentsTokens = m.getParameter("paymentTokens");
+
+  const marketPlace = m.contract("Marketplace", [
+    octoChest,
+    fee,
+    paymentsTokens,
+  ]);
+
+  return { octoChest, marketPlace };
 });
 
 export default OctoChestModule;
