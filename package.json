@@ -1,13 +1,13 @@
 {
-  "name": "octochest",
+  "name": "community-chest",
   "version": "1.0.0",
-  "description": "🧰 OctoChest - ERC721 NFT project with Hardhat + Foundry + IPFS",
+  "description": "🧰 CommunityChest - ERC721 NFT project with Hardhat + Foundry + IPFS",
   "license": "MIT",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
     "deploy": "hardhat compile && hardhat run scripts/deploy.ts --network $NETWORK",
-    "verify": "npx hardhat ignition verify chain-$CHAIN_ID",
+    "verify": "npx hardhat ignition verify chain-$CHAIN_ID --include-unrelated-contracts",
     "clean": "hardhat clean"
   },
   "devDependencies": {

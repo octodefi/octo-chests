@@ -8,14 +8,19 @@ import {ERC721Burnable} from "@openzeppelin/contracts/token/ERC721/extensions/ER
 import {ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-/// @title OctoChest NFT Contract
+/// @title CommunityChest NFT Contract
 /// @author 3Blocks
 /// @notice ERC721 NFT contract with enumerable and burnable functionality. Each NFT is randomly assigned one of 20 images stored on IPFS.
 /// @dev Uses OpenZeppelin Contracts v5.0 with AccessControl, ERC721Enumerable, and ERC721Burnable.
-contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
+contract CommunityChest is
+    ERC721,
+    ERC721Burnable,
+    AccessControl,
+    ERC721Enumerable
+{
     /// @notice Base URI for all token metadata, pointing to IPFS
     string private constant BASE_URI =
-        "ipfs://QmYegaVCjTtZa8juJYEcQLY4eiwXGrajenWPD85ASDaRLT/";
+        "ipfs://QmdscVX4s73EqpxWUwa1g445CGizwV5EWHf1eCmiJm1zF1/";
 
     uint8 public constant LEVEL_ONE_IMAGE_NUMBER = 5;
     uint8 public constant MAX_IMAGES = 20;
@@ -25,7 +30,7 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     // ┗━━━━━━━━━━━━━━━━━━━━┛
 
     /// @notice Error thrown when querying a nonexistent token
-    error OctoChestDontExist();
+    error CommunityChestDontExist();
 
     // ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     // ┃       StateVariable       ┃
@@ -50,7 +55,7 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
     constructor(
         address defaultAdmin,
         address minter
-    ) ERC721("OctoChest", "OC") {
+    ) ERC721("CommunityChest", "CC") {
         _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
         _grantRole(MINTER_ROLE, minter);
     }
@@ -122,7 +127,7 @@ contract OctoChest is ERC721, ERC721Burnable, AccessControl, ERC721Enumerable {
 
     function _tokenExist(uint256 tokenId) internal view {
         if (_ownerOf(tokenId) == address(0)) {
-            revert OctoChestDontExist();
+            revert CommunityChestDontExist();
         }
     }
 

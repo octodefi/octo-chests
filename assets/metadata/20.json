@@ -1,7 +1,7 @@
 {
   "name": "CommunityChest #20",
   "description": "An ancient Chest containing mysterious treasures. Level 2 NFT.",
-  "image": "ipfs://QmZGJUN2AQKRnjBLqV54ymsA1uSep6rBARqLEnw5fwjp8s/20.png",
+  "image": "ipfs://QmWntJ2uWXK3cQjCYsJhYVRpjcFZLKDcEHL4LpquSPbtdQ/20.png",
   "attributes": [
     { "trait_type": "background_color", "value": "pink" },
     { "trait_type": "level", "value": "2" },

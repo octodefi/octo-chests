@@ -11,15 +11,16 @@ contract Marketplace is Ownable, IMarketPlace {
     uint256 public constant MAX_FEE = 500;
     uint256 public constant FEE_MULTIPLIER = 10000;
 
-    address private immutable token;
     uint256 private s_fee;
 
     mapping(address token => bool valid) private s_paymentTokens;
-    mapping(uint256 tokenId => Listing info) private s_listings;
+
+    // Map each NFT contract + tokenId pair to its listing
+    mapping(address => mapping(uint256 => Listing)) private s_listings;
 
     /* ====== Modifiers ====== */
 
-    modifier isOctoOwner(uint256 tokenId) {
+    modifier isNFTOwner(address token, uint256 tokenId) {
         if (IERC721(token).ownerOf(tokenId) != msg.sender) {
             revert NotTheOwner(tokenId, msg.sender);
         }
@@ -33,21 +34,21 @@ contract Marketplace is Ownable, IMarketPlace {
         _;
     }
 
-    modifier isNotListed(uint256 tokenId) {
-        if (s_listings[tokenId].price > 0) {
+    modifier isNotListed(address token, uint256 tokenId) {
+        if (s_listings[token][tokenId].price > 0) {
             revert ListingAlreadyExist();
         }
         _;
     }
 
-    modifier isListed(uint256 tokenId) {
-        if (s_listings[tokenId].price == 0) {
+    modifier isListed(address token, uint256 tokenId) {
+        if (s_listings[token][tokenId].price == 0) {
             revert ListingDoesNotExist();
         }
         _;
     }
 
-    modifier isApproved(uint256 tokenId) {
+    modifier isApproved(address token, uint256 tokenId) {
         if (
             !IERC721(token).isApprovedForAll(msg.sender, address(this)) &&
             IERC721(token).getApproved(tokenId) != address(this)
@@ -72,13 +73,11 @@ contract Marketplace is Ownable, IMarketPlace {
     }
 
     constructor(
-        address _token,
         uint256 fee,
         address[] memory paymentTokens
     ) Ownable(msg.sender) {
         _isValidFee(fee);
 
-        token = _token;
         s_fee = fee;
         for (uint256 i = 0; i < paymentTokens.length; i++) {
             s_paymentTokens[paymentTokens[i]] = true;
@@ -88,56 +87,66 @@ contract Marketplace is Ownable, IMarketPlace {
     }
 
     function createListing(
+        address token,
         uint256 tokenId,
         uint256 price
     )
         external
-        isOctoOwner(tokenId)
+        isNFTOwner(token, tokenId)
         validPrice(price)
-        isNotListed(tokenId)
-        isApproved(tokenId)
+        isNotListed(token, tokenId)
+        isApproved(token, tokenId)
     {
-        _createListing(tokenId, price, address(0));
+        _createListing(token, tokenId, price, address(0));
     }
 
     function createListingWithToken(
+        address token,
         uint256 tokenId,
         uint256 price,
         address paymentToken
     )
         external
-        isOctoOwner(tokenId)
+        isNFTOwner(token, tokenId)
         validPrice(price)
-        isNotListed(tokenId)
-        isApproved(tokenId)
+        isNotListed(token, tokenId)
+        isApproved(token, tokenId)
         isValidPaymentToken(paymentToken)
     {
-        _createListing(tokenId, price, paymentToken);
+        _createListing(token, tokenId, price, paymentToken);
     }
 
     function cancelListing(
+        address token,
         uint256 tokenId
-    ) external isOctoOwner(tokenId) isListed(tokenId) {
-        delete s_listings[tokenId];
+    ) external isNFTOwner(token, tokenId) isListed(token, tokenId) {
+        delete s_listings[token][tokenId];
 
-        emit ListingCancelled(msg.sender, tokenId);
+        emit ListingCancelled(msg.sender, token, tokenId);
     }
 
     function updateListing(
+        address token,
         uint256 tokenId,
         uint256 newPrice
-    ) external isOctoOwner(tokenId) isListed(tokenId) validPrice(newPrice) {
-        s_listings[tokenId].price = newPrice;
+    )
+        external
+        isNFTOwner(token, tokenId)
+        isListed(token, tokenId)
+        validPrice(newPrice)
+    {
+        s_listings[token][tokenId].price = newPrice;
 
-        emit ListingUpdated(msg.sender, tokenId, newPrice);
+        emit ListingUpdated(msg.sender, token, tokenId, newPrice);
     }
 
     function purchaseListing(
+        address token,
         uint256 tokenId
-    ) external payable isListed(tokenId) {
+    ) external payable isListed(token, tokenId) {
         uint256 amount = msg.value;
 
-        Listing memory listing = s_listings[tokenId];
+        Listing memory listing = s_listings[token][tokenId];
 
         if (listing.paymentToken != address(0)) {
             revert NoValidPaymentToken();
@@ -147,18 +156,30 @@ contract Marketplace is Ownable, IMarketPlace {
             revert NotEnoughFundsSupplied();
         }
 
-        uint256 netAmount = _executePurchase(amount, tokenId, listing.seller);
+        uint256 netAmount = _executePurchase(
+            token,
+            amount,
+            tokenId,
+            listing.seller
+        );
 
-        emit ListingPurchased(msg.sender, listing.seller, tokenId, address(0));
+        emit ListingPurchased(
+            msg.sender,
+            listing.seller,
+            token,
+            tokenId,
+            address(0)
+        );
 
         (bool sent, ) = payable(listing.seller).call{value: netAmount}("");
         if (!sent) revert FailedToSendCoins();
     }
 
     function purchaseListingWithToken(
+        address token,
         uint256 tokenId
-    ) external isListed(tokenId) {
-        Listing memory listing = s_listings[tokenId];
+    ) external isListed(token, tokenId) {
+        Listing memory listing = s_listings[token][tokenId];
 
         if (listing.paymentToken == address(0)) {
             revert NoValidPaymentToken();
@@ -175,6 +196,7 @@ contract Marketplace is Ownable, IMarketPlace {
         }
 
         uint256 netAmount = _executePurchase(
+            token,
             listing.price,
             tokenId,
             listing.seller
@@ -182,6 +204,7 @@ contract Marketplace is Ownable, IMarketPlace {
         emit ListingPurchased(
             msg.sender,
             listing.seller,
+            token,
             tokenId,
             listing.paymentToken
         );
@@ -221,7 +244,7 @@ contract Marketplace is Ownable, IMarketPlace {
 
     function addPaymentToken(
         address _token
-    ) external onlyOwner paymentTokenDoesNotExist(token) {
+    ) external onlyOwner paymentTokenDoesNotExist(_token) {
         s_paymentTokens[_token] = true;
 
         emit NewPaymentToken(_token);
@@ -236,25 +259,27 @@ contract Marketplace is Ownable, IMarketPlace {
     }
 
     function _createListing(
+        address token,
         uint256 tokenId,
         uint256 price,
         address paymentToken
     ) internal {
-        s_listings[tokenId] = Listing({
+        s_listings[token][tokenId] = Listing({
             price: price,
             seller: msg.sender,
             paymentToken: paymentToken
         });
 
-        emit ListingCreated(msg.sender, tokenId, price, paymentToken);
+        emit ListingCreated(msg.sender, token, tokenId, price, paymentToken);
     }
 
     function _executePurchase(
+        address token,
         uint256 price,
         uint256 tokenId,
         address seller
     ) internal returns (uint256 netPrice) {
-        delete s_listings[tokenId];
+        delete s_listings[token][tokenId];
 
         IERC721(token).safeTransferFrom(seller, msg.sender, tokenId);
 
@@ -267,14 +292,11 @@ contract Marketplace is Ownable, IMarketPlace {
         return s_fee;
     }
 
-    function getNFTAddress() external view returns (address) {
-        return token;
-    }
-
     function getListing(
+        address token,
         uint256 tokenId
     ) external view returns (Listing memory) {
-        return s_listings[tokenId];
+        return s_listings[token][tokenId];
     }
 
     function isPaymentToken(address _token) external view returns (bool) {

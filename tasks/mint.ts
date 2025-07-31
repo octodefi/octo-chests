@@ -15,9 +15,9 @@ task("mint", "mint a new octo chest")
 
     const { chainId } = await hre.ethers.provider.getNetwork();
 
-    const octoChestAddress = getDeployedAddress(
-      "OctoChestModule",
-      "OctoChest",
+    const communityChestAddress = getDeployedAddress(
+      "CommunityChestModule",
+      "CommunityChest",
       Number(chainId)
     );
 
@@ -26,8 +26,8 @@ task("mint", "mint a new octo chest")
     const signerAddress = await signer.getAddress();
 
     const contract = await hre.ethers.getContractAt(
-      "OctoChest",
-      octoChestAddress
+      "CommunityChest",
+      communityChestAddress
     );
 
     const minterRole = await contract.MINTER_ROLE();

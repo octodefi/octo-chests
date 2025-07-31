@@ -17,20 +17,20 @@ task("create-listing")
       const { chainId } = await hre.ethers.provider.getNetwork();
 
       const marketPlaceAddress = getDeployedAddress(
-        "OctoChestModule",
+        "CommunityChestModule",
         "Marketplace",
         Number(chainId)
       );
 
-      const octoChestAddress = getDeployedAddress(
-        "OctoChestModule",
-        "OctoChest",
+      const communityChestAddress = getDeployedAddress(
+        "CommunityChestModule",
+        "CommunityChest",
         Number(chainId)
       );
 
       const chestContract = await hre.ethers.getContractAt(
-        "OctoChest",
-        octoChestAddress
+        "CommunityChest",
+        communityChestAddress
       );
 
       const approveTrx = await chestContract.approve(

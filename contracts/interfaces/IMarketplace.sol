@@ -12,15 +12,21 @@ interface IMarketPlace {
 
     event ListingCreated(
         address indexed seller,
+        address indexed token,
         uint256 indexed tokenId,
         uint256 price,
         address paymentToken
     );
 
-    event ListingCancelled(address indexed seller, uint256 indexed tokenId);
+    event ListingCancelled(
+        address indexed seller,
+        address indexed token,
+        uint256 indexed tokenId
+    );
 
     event ListingUpdated(
         address indexed seller,
+        address indexed token,
         uint256 indexed tokenId,
         uint256 newPrice
     );
@@ -28,7 +34,8 @@ interface IMarketPlace {
     event ListingPurchased(
         address indexed buyer,
         address indexed seller,
-        uint256 indexed tokenId,
+        address indexed token,
+        uint256 tokenId,
         address paymentToken
     );
 
@@ -55,21 +62,30 @@ interface IMarketPlace {
 
     /* ====== External Functions ====== */
 
-    function createListing(uint256 tokenId, uint256 price) external;
+    function createListing(
+        address token,
+        uint256 tokenId,
+        uint256 price
+    ) external;
 
     function createListingWithToken(
+        address token,
         uint256 tokenId,
         uint256 price,
         address paymentToken
     ) external;
 
-    function cancelListing(uint256 tokenId) external;
+    function cancelListing(address token, uint256 tokenId) external;
 
-    function updateListing(uint256 tokenId, uint256 newPrice) external;
+    function updateListing(
+        address token,
+        uint256 tokenId,
+        uint256 newPrice
+    ) external;
 
-    function purchaseListing(uint256 tokenId) external payable;
+    function purchaseListing(address token, uint256 tokenId) external payable;
 
-    function purchaseListingWithToken(uint256 tokenId) external;
+    function purchaseListingWithToken(address token, uint256 tokenId) external;
 
     function setFee(uint256 newFee) external;
 
@@ -81,9 +97,10 @@ interface IMarketPlace {
 
     function getFee() external view returns (uint256);
 
-    function getNFTAddress() external view returns (address);
-
-    function getListing(uint256 tokenId) external view returns (Listing memory);
+    function getListing(
+        address token,
+        uint256 tokenId
+    ) external view returns (Listing memory);
 
     function isPaymentToken(address _token) external view returns (bool);
 }
