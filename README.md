@@ -1,4 +1,4 @@
-## 🐙 OctoChest NFT
+## Community NFT
 
 ![Octo DeFi Logo](./assets/octo-defi-logo.png)
 
@@ -36,14 +36,14 @@ Built with **Solidity**, **Hardhat**, **Foundry**, and **OpenZeppelin**, and dep
 ```
 .
 ├── contracts/
-│   └── OctoChest.sol          # Main smart contract
+│   └── CommunityChest.sol          # Main smart contract
 ├── ignition/
 │   └── modules/
-│       └── OctoChestModule.ts # Ignition deployment module
+│       └── CommunityChestModule.ts # Ignition deployment module
 ├── scripts/
 │   └── interact.ts            # (optional) interaction examples
 ├── test/
-│   └── OctoChest.test.ts      # Contract tests
+│   └── CommunityChest.test.ts      # Contract tests
 ├── foundry.toml
 ├── hardhat.config.ts
 ├── README.md
@@ -111,7 +111,7 @@ ignition/deployments/chain-<chainId>/deployed_addresses.json
 The metadata is served via IPFS and looks like:
 
 ```
-ipfs://QmZS34ktG626a3Gqu7CC3QiHeRtVWQzDSt7LsDGHuZoJzw/<imageNumber>.json
+ipfs://QmdscVX4s73EqpxWUwa1g445CGizwV5EWHf1eCmiJm1zF1/<imageNumber>.json
 ```
 
 Each token’s metadata file is randomly selected from 20 variants (`1.json` to `20.json`) at mint time.
