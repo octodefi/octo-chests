@@ -49,7 +49,11 @@ task("create-listing")
         marketPlaceAddress
       );
 
-      const trx = await contract.createListing(tokenid, parsedPrice);
+      const trx = await contract.createListing(
+        communityChestAddress,
+        tokenid,
+        parsedPrice
+      );
 
       await trx.wait();
 

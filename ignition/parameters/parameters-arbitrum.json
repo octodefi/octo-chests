@@ -1,7 +1,7 @@
 {
   "CommunityChestModule": {
     "defaultAdmin": "0xd4Fa4ee93D7D27c1c4Be36bfBa67183dD4320123",
-    "minter": "0x95bE54F8C5b9C85FD0fd2EA1012B0153299bEcfe",
+    "minter": "0xF33c9266CA69C72DD094386343De9f3E5649D35e",
     "fee": 200,
     "paymentTokens": [
       "0x0000000000000000000000000000000000000000",
