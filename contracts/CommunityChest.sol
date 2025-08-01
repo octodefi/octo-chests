@@ -20,7 +20,7 @@ contract CommunityChest is
 {
     /// @notice Base URI for all token metadata, pointing to IPFS
     string private constant BASE_URI =
-        "ipfs://QmdscVX4s73EqpxWUwa1g445CGizwV5EWHf1eCmiJm1zF1/";
+        "ipfs://QmZtTHaQ7qzKvLSUeXAayuNcrPtytjzRX7SoavrhnRsnTX/";
 
     uint8 public constant LEVEL_ONE_IMAGE_NUMBER = 5;
     uint8 public constant MAX_IMAGES = 20;
