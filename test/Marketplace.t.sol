@@ -6,6 +6,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {Marketplace} from "../contracts/Marketplace.sol";
 import {IMarketPlace} from "../contracts/interfaces/IMarketplace.sol";
+import {CommunityChest} from "../contracts/CommunityChest.sol";
 
 contract MarketplaceTest is Test {
     Marketplace marketplace;
@@ -13,6 +14,8 @@ contract MarketplaceTest is Test {
     uint256 public constant FEE = 200;
 
     address public OWNER = makeAddr("owner");
+    address public ADMIN = makeAddr("admin");
+    address public MINTER = makeAddr("minter");
 
     function setUp() external {
         address[] memory paymentsToken = new address[](1);
@@ -55,19 +58,26 @@ contract MarketplaceTest is Test {
         address seller = makeAddr("seller");
         address buyer = makeAddr("buyer");
 
-        uint256 tokenId = 200;
+        uint256 tokenId = 0;
 
         uint256 price = 2.5 ether;
 
-        mockContracts(token, seller);
+        CommunityChest nft = new CommunityChest(ADMIN, MINTER);
 
-        vm.prank(seller);
-        marketplace.createListing(token, tokenId, price);
+        vm.prank(MINTER);
+        nft.safeMintLevel1(seller);
 
+        vm.startPrank(seller);
+
+        nft.approve(address(marketplace), tokenId);
+
+        marketplace.createListing(address(nft), tokenId, price);
+
+        vm.stopPrank();
         deal(buyer, price);
 
         vm.prank(buyer);
-        marketplace.purchaseListing{value: price}(token, tokenId);
+        marketplace.purchaseListing{value: price}(address(nft), tokenId);
     }
 
     function mockContracts(address token, address owner) internal {
