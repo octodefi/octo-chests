@@ -1,4 +1,5 @@
 {
   "CommunityChestModule#CommunityChest": "0xaD7046b104962E34CcdbFf02D8CD7E96a5b8A7C8",
-  "CommunityChestModule#Marketplace": "0x9E36082dAFDF71cD1b1210847977B54c87d835b8"
+  "CommunityChestModule#Marketplace": "0x9E36082dAFDF71cD1b1210847977B54c87d835b8",
+  "CommunityChestModule#CommunityChestRedeem": "0xFBfd73990FBe8c7a2E34AC41c7fF959d134100b9"
 }

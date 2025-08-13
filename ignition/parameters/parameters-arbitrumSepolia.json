@@ -3,6 +3,9 @@
     "defaultAdmin": "0xd4Fa4ee93D7D27c1c4Be36bfBa67183dD4320123",
     "minter": "0xF5C623BC8f11Aa5b8A5bE0A133f16342f82e3D4E",
     "fee": 200,
-    "paymentTokens": ["0x0000000000000000000000000000000000000000"]
+    "paymentTokens": ["0x0000000000000000000000000000000000000000"],
+    "level1Payout": 10e6,
+    "level2Payout": 20e6,
+    "redeemToken": "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d"
   }
 }

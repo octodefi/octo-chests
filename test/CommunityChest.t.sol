@@ -33,7 +33,7 @@ contract CommunityChestTest is Test {
         uint8 imageNumber = nft.imageNumberOf(tokenId); // you may need to expose this if private
         string memory expectedUri = string(
             abi.encodePacked(
-                "ipfs://QmdscVX4s73EqpxWUwa1g445CGizwV5EWHf1eCmiJm1zF1/",
+                "ipfs://QmZtTHaQ7qzKvLSUeXAayuNcrPtytjzRX7SoavrhnRsnTX/",
                 Strings.toString(imageNumber),
                 ".json"
             )

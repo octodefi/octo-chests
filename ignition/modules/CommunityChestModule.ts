@@ -16,7 +16,19 @@ const CommunityChestModule = buildModule("CommunityChestModule", (m) => {
 
   const marketPlace = m.contract("Marketplace", [fee, paymentsTokens]);
 
-  return { communityChest, marketPlace };
+  const level1Payout = m.getParameter("level1Payout");
+  const level2Payout = m.getParameter("level2Payout");
+
+  const redeemToken = m.getParameter("redeemToken");
+
+  const redeemContract = m.contract("CommunityChestRedeem", [
+    redeemToken,
+    communityChest,
+    level1Payout,
+    level2Payout,
+  ]);
+
+  return { communityChest, marketPlace, redeemContract };
 });
 
 export default CommunityChestModule;
