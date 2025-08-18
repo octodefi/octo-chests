@@ -6,6 +6,9 @@
     "paymentTokens": [
       "0x0000000000000000000000000000000000000000",
       "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
-    ]
+    ],
+    "level1Payout": 15e6,
+    "level2Payout": 50e6,
+    "redeemToken": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
   }
 }
