@@ -80,7 +80,7 @@ contract Marketplace is Ownable, IMarketPlace {
 
         s_fee = fee;
         for (uint256 i = 0; i < paymentTokens.length; i++) {
-            s_paymentTokens[paymentTokens[i]] = true;
+            _addPaymentToken(paymentTokens[i]);
         }
 
         emit FeeSet(fee);
@@ -245,12 +245,16 @@ contract Marketplace is Ownable, IMarketPlace {
     function addPaymentToken(
         address _token
     ) external onlyOwner paymentTokenDoesNotExist(_token) {
+        _addPaymentToken(_token);
+    }
+
+    /* ====== Internal Functions ====== */
+
+    function _addPaymentToken(address _token) internal {
         s_paymentTokens[_token] = true;
 
         emit NewPaymentToken(_token);
     }
-
-    /* ====== Internal Functions ====== */
 
     function _isValidFee(uint256 fee) internal pure {
         if (fee > MAX_FEE) {
